@@ -3,10 +3,44 @@ const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+const userRoute = require('./routes/userRoute')
+const productRoute = require("./routes/productRoute");
+const contactRoute = require("./routes/contactRoute");
+const errorHandler = require("./middleware/errorMiddleware");
+const cookieParser = require ('cookie-parser')
+const path = require("path");
 
 const app = express();
 
+//Middlewares
+app.use(express.json())
+app.use(cookieParser())
+app.use(express.urlencoded({extended: false}))
+app.use(bodyParser.json())
+app.use(
+  cors({
+    origin: ["http://localhost:3000", "https://robo-app-inventory.vercel.app"],
+    // origin: "http://localhost:3000",
+    credentials: true,
+  })
+);
+app.use("/uploads", express.static(path.join(__dirname, 'uploads')));
+
+
+//Routes Middle ware
+app.use('/api/users', userRoute)
+app.use("/api/products", productRoute);
+app.use("/api/contactus", contactRoute);
+
+//Routes
+app.get('/', (req, res)=> {
+res.send('HomePage')
+})
+
 const PORT = process.env.PORT || 5000;
+
+//Middleware error
+app.use(errorHandler)
 
 //Connect to DB and start server
 mongoose
