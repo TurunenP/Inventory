@@ -1,42 +1,42 @@
 const express = require("express");
-const Order = require("../models/orderModel"); // Assuming you have an OrderItem model
+const Order = require("../models/orderModel");
 
-// Create a new order item
-const createOrderItem = async (req, res) => {
+// Create a new order
+const createOrder = async (req, res) => {
   try {
-    const orderItem = new OrderItem(req.body);
-    await orderItem.save();
-    res.status(201).send(orderItem);
+    const order = new Order(req.body);
+    await order.save();
+    res.status(201).json(order);
   } catch (error) {
-    res.status(400).send(error);
+    res.status(400).json(error);
   }
 };
 
-// Read all order items
-const getAllOrderItems = async (req, res) => {
+// Read all orders
+const getAllOrders = async (req, res) => {
   try {
-    const orderItems = await OrderItem.find({});
-    res.status(200).send(orderItems);
+    const order = await Order.find({});
+    res.status(200).json(order);
   } catch (error) {
-    res.status(500).send(error);
+    res.status(500).json(error);
   }
 };
 
-// Read a single order item by ID
-const getOrderItemById = async (req, res) => {
+// Read a single order  by ID
+const getOrderById = async (req, res) => {
   try {
-    const orderItem = await OrderItem.findById(req.params.id);
-    if (!orderItem) {
-      return res.status(404).send();
+    const order = await Order.findById(req.params.id);
+    if (!order) {
+      return res.status(404).json();
     }
-    res.status(200).send(orderItem);
+    res.status(200).json(order);
   } catch (error) {
-    res.status(500).send(error);
+    res.status(500).json(error);
   }
 };
 
-// Update an order item by ID
-const updateOrderItemById = async (req, res) => {
+// Update an order  by ID
+const updateOrderById = async (req, res) => {
   const updates = Object.keys(req.body);
   const allowedUpdates = ["name", "quantity", "price"]; // Add other fields as necessary
   const isValidOperation = updates.every((update) =>
@@ -44,40 +44,40 @@ const updateOrderItemById = async (req, res) => {
   );
 
   if (!isValidOperation) {
-    return res.status(400).send({ error: "Invalid updates!" });
+    return res.status(400).json({ error: "Invalid updates!" });
   }
 
   try {
-    const orderItem = await OrderItem.findById(req.params.id);
-    if (!orderItem) {
-      return res.status(404).send();
+    const order = await Order.findById(req.params.id);
+    if (!order) {
+      return res.status(404).json();
     }
 
-    updates.forEach((update) => (orderItem[update] = req.body[update]));
-    await orderItem.save();
-    res.status(200).send(orderItem);
+    updates.forEach((update) => (Order[update] = req.body[update]));
+    await order.save();
+    res.status(200).json(Order);
   } catch (error) {
-    res.status(400).send(error);
+    res.status(400).json(error);
   }
 };
 
-// Delete an order item by ID
-const deleteOrderItemById = async (req, res) => {
+// Delete an order  by ID
+const deleteOrderById = async (req, res) => {
   try {
-    const orderItem = await OrderItem.findByIdAndDelete(req.params.id);
-    if (!orderItem) {
-      return res.status(404).send();
+    const order = await Order.findByIdAndDelete(req.params.id);
+    if (!order) {
+      return res.status(404).json();
     }
-    res.status(200).send(orderItem);
+    res.status(200).json(order);
   } catch (error) {
-    res.status(500).send(error);
+    res.status(500).json(error);
   }
 };
 
-exports = {
-  createOrderItem,
-  getAllOrderItems,
-  getOrderItemById,
-  updateOrderItemById,
-  deleteOrderItemById,
+module.exports = {
+  createOrder,
+  getAllOrders,
+  getOrderById,
+  updateOrderById,
+  deleteOrderById,
 };
