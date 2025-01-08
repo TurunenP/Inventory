@@ -1,35 +1,36 @@
 const mongoose = require("mongoose");
+const orderSchema = new mongoose.Schema({
+  user_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+  },
+  order_items: [
+    {
+      item_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Equipment",
+        required: true,
+      },
+      quantity: {
+        type: Number,
+        required: true,
+        min: 0,
+      },
+    },
+  ],
 
-const equipmentSchema = new mongoose.Schema({
-  equipment_type: {
+  order_date: {
+    type: Date,
+    default: Date.now,
+  },
+  status: {
     type: String,
-    required: true,
-    trim: true,
-  },
-  equipment_room: {
-    type: String,
-    trim: true,
-  },
-  equipment_location: {
-    type: String,
-    trim: true,
-  },
-  equipment_category: {
-    type: String,
-    trim: true,
-  },
-  total_quantity: {
-    type: Number,
-    required: true,
-    min: 0,
-  },
-  current_quantity: {
-    type: Number,
-    required: true,
-    min: 0,
+    enum: ["pending", "shipped", "delivered"],
+    default: "pending",
   },
 });
 
-const Equipment = mongoose.model("Equipment", equipmentSchema);
+const Order = mongoose.model("Order", orderSchema);
 
-module.exports = Equipment;
+module.exports = Order;
