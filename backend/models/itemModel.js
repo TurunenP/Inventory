@@ -28,6 +28,19 @@ const itemSchema = new mongoose.Schema({
     required: true,
     min: 0,
   },
+  item_description: {
+    type: String,
+    trim: true,
+  },
+  item_status: {
+    type: String,
+    enum: ["available", "unavailable"],
+    default: "available",
+  },
+  item_image: {
+    type: String,
+    trim: true,
+  },
 });
 
 const Item = mongoose.model("Item", itemSchema);
